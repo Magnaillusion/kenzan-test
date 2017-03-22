@@ -10,7 +10,7 @@ public class Path {
 		public static String GET_CUSTOMER    = HOME + "customers/:id";
 		public static String DELETE_CUSTOMER = HOME + "customers/:id";  // Uses POST
 		public static String UPDATE_CUSTOMER = HOME + "customers/:id";  // Uses POST
-		public static String CREATE_CUSTOMER = "/customers/";     // Uses POST
+		public static String CREATE_CUSTOMER = HOME + "customers/";     // Uses POST
 	}
 	
 	public static class Templates {}

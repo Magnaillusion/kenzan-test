@@ -7,14 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mongodb.morphia.Datastore;
 import org.bson.types.ObjectId;
 import org.jsoup.Jsoup;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
-import spark.Session;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 public class CustomerController {
 	protected static DatabaseHelper dbHelper = new DatabaseHelper();
@@ -64,6 +61,38 @@ public class CustomerController {
 		}
 		
 		return (customer != null) ? customer.toJson() : "Customer not found";
+	}
+	
+	public static String handleGetAllCustomers(Request req, Response res) {
+		res.type("application/json");
+		List<Customer> customers = new ArrayList<Customer>();
+		StringBuilder reply = new StringBuilder();
+		
+		try {
+			ds = dbHelper.getDatastore();
+			customers = ds.createQuery(Customer.class).asList();
+			
+			res.status(Path.Reply.OK);
+		}
+		
+		catch(Exception e) {
+			e.printStackTrace();
+			res.status(Path.Reply.INTERNAL_SERVER_ERROR);
+		}
+		
+		reply.append("[");
+		
+		for(int i = 0; i < customers.size(); ++i) {
+			if (i != 0) {
+				reply.append(",");
+			}
+			
+			reply.append(customers.get(i).toJson());
+		}
+		
+		reply.append("]");
+		
+		return reply.toString();
 	}
 	
 	public static String handleUpdateCustomer(Request req, Response res) {
@@ -123,6 +152,6 @@ public class CustomerController {
 			res.status(Path.Reply.INTERNAL_SERVER_ERROR);
 		}
 
-		return String.valueOf(res.status());
+		return "200";
 	}
 }
